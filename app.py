@@ -90,7 +90,7 @@ class UserAnswer(db.Model):
     selected_answer = db.relationship('Answer')
 
 
-# Создаем администратора при первом запуске приложения
+
 @app.before_request
 def create_admin():
     if User.query.filter_by(login='admin').first() is None:
@@ -111,8 +111,8 @@ def login():
     user = User.query.filter_by(login=login).first()
     
     if user and check_password_hash(user.password, password):
-        session['user_id'] = user.user_id  # Сохраняем ID пользователя в сессии
-        return redirect(url_for('profile'))  # Перенаправляем на страницу профиля
+        session['user_id'] = user.user_id 
+        return redirect(url_for('profile'))  
     else:
         flash("Неверный логин или пароль")
         return redirect(url_for('index'))
@@ -125,7 +125,7 @@ def profile():
 
     user = User.query.get(session['user_id'])
 
-    # Проверяем, является ли пользователь администратором
+    
     if user.login != 'admin':
         user_group = user.group
         available_tests = Test.query.filter_by(group_id=user.group_id).all()
@@ -138,10 +138,10 @@ def profile():
 
 @app.route("/logout")
 def logout():
-    session.pop('user_id', None)  # Удаляем ID пользователя из сессии
+    session.pop('user_id', None)  
     return redirect(url_for('index'))
 
-# Декоратор для проверки прав доступа
+
 def admin_required(f):
     def wrapper(*args, **kwargs):
         if 'user_id' not in session:
@@ -164,7 +164,7 @@ def test(test_id):
     user = User.query.get(session['user_id'])
     test = Test.query.get(test_id)
 
-    # Проверяем, прошел ли пользователь тест
+    
     user_test = UserTest.query.filter_by(user_id=user.user_id, test_id=test.test_id).first()
 
     if user_test:
@@ -179,15 +179,15 @@ def test(test_id):
         correct_answers = 0
         for question in test.questions:
             if question.question_type == 'множественный выбор':
-                # Получаем все правильные ответы для текущего вопроса
+                
                 correct_answer_ids = {answer.answer_id for answer in question.answers if answer.is_correct}
                 selected_answer_ids = {int(request.form.get(f'question_{question.question_id}_{i}')) for i in range(1, len(question.answers) + 1) if request.form.get(f'question_{question.question_id}_{i}')}
 
-                # Проверяем, выбраны ли все правильные ответы и не выбраны ли неправильные
+                
                 if selected_answer_ids == correct_answer_ids and len(selected_answer_ids) == len(correct_answer_ids):
                     correct_answers += 1
 
-                # Сохраняем выбранные ответы пользователя
+                
                 for selected_answer_id in selected_answer_ids:
                     user_answer = UserAnswer(
                         user_test_id=user_test.user_test_id,
@@ -282,7 +282,7 @@ def create_test():
         try:
             db.session.add(new_test)
             db.session.commit()
-            return redirect('/group')
+            return redirect('/profile')
         except Exception as e:
             return f'Произошла ошибка при добавлении теста: {e}'
     
@@ -308,31 +308,31 @@ def create_question(test_id):
             question_text = request.form['question_text']
             question_type = request.form['question_type']
 
-            # Обработка загрузки изображения
+            
             image_url = None
             if 'image' in request.files:
                 file = request.files['image']
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                    file.save(file_path)  # Сохранение файла
-                    image_url = f'img/{filename}'  # Сохраните относительный путь
+                    file.save(file_path)  
+                    image_url = f'img/{filename}'  
 
             new_question = Question(question_text=question_text, question_type=question_type, image_url=image_url, test_id=test_id)
             
-            # Добавляем вопрос в сессию и сохраняем изменения
-            db.session.add(new_question)
-            db.session.commit()  # Сохраняем, чтобы получить question_id
             
-            # Получаем ответы и сохраняем их
+            db.session.add(new_question)
+            db.session.commit()  
+            
+            
             answers = request.form.getlist('answers')
             for i, answer_text in enumerate(answers):
-                is_correct = request.form.get(f'is_correct_{i}') == '1'  # Проверяем, был ли ответ правильным
+                is_correct = request.form.get(f'is_correct_{i}') == '1'  
                 new_answer = Answer(answer_text=answer_text, is_correct=is_correct, question_id=new_question.question_id)
                 db.session.add(new_answer)
 
-            db.session.commit()  # Сохраняем все ответы
-            return redirect('/group')  # Перенаправляем на страницу групп после успешного создания
+            db.session.commit()  
+            return redirect('/profile')  
             
         except Exception as e:
             return f'Произошла ошибка при добавлении вопроса: {e}'
@@ -343,9 +343,7 @@ def create_question(test_id):
 
 @app.route('/view_test/<int:test_id>')
 def view_test(test_id):
-    # Получаем тест по ID
     test = Test.query.get(test_id)
-    # Получаем все вопросы для этого теста
     questions = Question.query.filter_by(test_id=test_id).all()
     
     return render_template('view_test.html', test=test, questions=questions)
@@ -413,7 +411,7 @@ def create_group():
         try:
             db.session.add(create_group)
             db.session.commit()
-            return redirect('/group')
+            return redirect('/profile')
         except:
             return 'При добавлении группы произошла ошибка'
     else:
@@ -472,7 +470,7 @@ def export_results():
     results = query.all()
     question_counts = {test.test_id: len(test.questions) for test in db.session.query(Test).options(db.orm.joinedload(Test.questions)).all()}
 
-    # Подготовка данных для экспорта
+    
     data = []
     for result in results:
         data.append({
@@ -484,7 +482,7 @@ def export_results():
             'Дата прохождения теста': result.completed_at.strftime('%d-%m-%Y %H:%M') if result.completed_at else 'Не завершён'
         })
 
-    # Создание DataFrame и экспорт в Excel
+    
     df = pd.DataFrame(data)
     output_file = "результаты_тестов.xlsx"
     df.to_excel(output_file, index=False)
