@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Создать вопрос{% endblock %}
+{% block content %}
+<h2>Создание вопроса для теста: {{ test.title }}</h2>
+<form method="POST" enctype="multipart/form-data" class="form-control">
+    <div class="form-group">
+        <label for="question_text">Текст вопроса:</label>
+        <textarea id="question_text" name="question_text" required class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="question_type">Тип вопроса:</label>
+        <select id="question_type" name="question_type" required class="form-control">
+            <option value="одиночный выбор">Одиночный выбор</option>
+            <option value="множественный выбор">Множественный выбор</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="image">Загрузить изображение:</label>
+        <input type="file" id="image" name="image" accept="image/*" class="form-control">  
+    </div>
+
+    <h3>Ответы:</h3>
+    <div class="form-group">
+        <input type="text" name="answers" placeholder="Ответ 1" required class="form-control">
+        <input type="checkbox" name="is_correct_0" value="1"> Правильный ответ
+    </div>
+    <div class="form-group">
+        <input type="text" name="answers" placeholder="Ответ 2" required class="form-control">
+        <input type="checkbox" name="is_correct_1" value="1"> Правильный ответ
+    </div>
+    <div class="form-group">
+        <input type="text" name="answers" placeholder="Ответ 3" class="form-control">
+        <input type="checkbox" name="is_correct_2" value="1"> Правильный ответ
+    </div>
+    <div class="form-group">
+        <input type="text" name="answers" placeholder="Ответ 4" class="form-control">
+        <input type="checkbox" name="is_correct_3" value="1"> Правильный ответ
+    </div>
+    <p></p>
+    <div>
+        <button type="submit" >Создать вопрос</button>
+    </div>
+</form>
+
+<a href="{{ url_for('profile') }}">Назад к профилю</a>
+
+{% endblock %}

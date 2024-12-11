@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %} Профиль {% endblock %}
+
+{% block content %}
+<h1>Добро пожаловать, {{ user.user_name }}!</h1>
+
+
+{% if user.login != 'admin' %}
+    <h2>Ваша группа:</h2>
+    <p>{{ user_group.group_name }}</p>
+
+    <h2>Доступные тесты:</h2>
+    <ul>
+        {% for test in available_tests %}
+            <li>
+                <a href="{{ url_for('test', test_id=test.test_id) }}">{{ test.title }}</a> - {{ test.description }}
+            </li>
+        {% else %}
+            <li>У вас нет доступных тестов.</li>
+        {% endfor %}
+    </ul>
+    
+{% else %}
+    <p>Вы вошли как администратор.</p>
+{% endif %}
+
+<a href="{{ url_for('logout') }}">Выйти</a>
+{% endblock %}

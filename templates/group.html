@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   Группы обучения
+{% endblock %}
+
+{% block content %} 
+<h2>Группы обучения</h2>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    {% for group in groups %}
+    <div class="col">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <p class="card-text">{{group.group_name}}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+                <a href="{{ url_for('group_tests', group_id=group.group_id) }}" class="btn btn-sm btn-outline-secondary">Подробнее</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+<a href="{{ url_for('profile') }}">Назад к профилю</a>
+{% endblock %}

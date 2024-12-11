@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Результаты теста{% endblock %}
+{% block content %}
+<h1>Результаты теста: {{ test.title }}</h1>
+<p>Вы набрали {{ user_test.score }} баллов из {{ test.questions|length }}.</p>
+
+<h2>Вопросы и ответы:</h2>
+<ul>
+    {% for question in test.questions %}
+        <li>
+            <h3>{{ question.question_text }}</h3>
+            {% if question.image_url %}
+                <img src="{{ url_for('static', filename=question.image_url) }}" alt="Изображение вопроса">
+            {% endif %}
+            <p>Ваш ответ:</p>
+            <ul>
+                {% if question.question_id in user_answers %}
+                    {% for selected_answer_id in user_answers[question.question_id] %}
+                        {% set selected_answer = Answer.query.get(selected_answer_id) %}
+                        <li>{{ selected_answer.answer_text }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li>не был дан</li>
+                {% endif %}
+            </ul>
+            <p>Правильный ответ:</p>
+            <ul>
+                {% for answer in question.answers %}
+                    {% if answer.is_correct %}
+                        <li>{{ answer.answer_text }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{{ url_for('profile') }}">Назад к профилю</a>
+{% endblock %}
+

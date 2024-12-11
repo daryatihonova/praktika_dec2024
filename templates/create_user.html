@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   Создание пользователей
+{% endblock %}
+
+{% block content %} 
+<h2>Создать нового пользователя</h2>
+
+<form method="POST" class="form-control">
+   {{ form.hidden_tag() }}
+   <p>
+       {{ form.user_name.label }}<br>
+       {{ form.user_name(class="form-control") }}<br>
+       {% for error in form.user_name.errors %}
+           <span style="color: red;">[{{ error }}]</span>
+       {% endfor %}
+   </p>
+   <p>
+       {{ form.login.label }}<br>
+       {{ form.login(class="form-control") }}<br>
+       {% for error in form.login.errors %}
+           <span style="color: red;">[{{ error }}]</span>
+       {% endfor %}
+   </p>
+   <p>
+       {{ form.password.label }}<br>
+       {{ form.password(class="form-control") }}<br>
+       {% for error in form.password.errors %}
+           <span style="color: red;">[{{ error }}]</span>
+       {% endfor %}
+   </p>
+   <p>
+       {{ form.group_id.label }}<br>
+       {{ form.group_id(class="form-control") }}<br>
+            {% for error in form.group_id.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+
+<a href="{{ url_for('profile') }}">Назад к профилю</a>
+{% endblock %}

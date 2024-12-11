@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Результат{% endblock %}
+{% block content %}
+<h2>Результаты тестов пользователей</h2>
+
+<form method="GET" action="{{ url_for('admin_results') }}">
+    <label for="start_date">Начальная дата:</label>
+    <input type="date" id="start_date" name="start_date">
+    
+    <label for="end_date">Конечная дата:</label>
+    <input type="date" id="end_date" name="end_date">
+    
+    <button type="submit">Фильтровать</button>
+</form>
+<p> </p>
+<table>
+    <thead>
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Логин</th>
+            <th>Группа обучения</th>
+            <th>Тест</th>
+            <th>Количество баллов</th>
+            <th>Дата прохождения теста</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in results %}
+        <tr>
+            <td>{{ result.user.user_name }}</td>
+            <td>{{ result.user.login }}</td>
+            <td>{{ result.user.group.group_name }}</td>
+            <td>{{ result.test.title }}</td>
+            <td>{{ result.score }} из {{ question_counts[result.test.test_id] }}</td>
+            <td>{{ result.completed_at.strftime('%d-%m-%Y %H:%M') if result.completed_at else 'Не завершён' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p> </p>
+
+<!-- Кнопка для экспорта в Excel -->
+<form method="GET" action="{{ url_for('export_results') }}">
+    <input type="hidden" name="start_date" value="{{ request.args.get('start_date') }}">
+    <input type="hidden" name="end_date" value="{{ request.args.get('end_date') }}">
+    <button type="submit">Экспортировать в Excel</button> <p>Перед получением результата необходимо выбрать даты </p>
+</form>
+
+<a href="{{ url_for('profile') }}">Назад к профилю</a>
+
+{% endblock %}

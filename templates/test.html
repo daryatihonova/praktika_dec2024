@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Тест: {{ test.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ test.title }}</h1>
+<p>{{ test.description }}</p>
+
+
+<form method="POST">
+    {% for question in questions %}
+        <h3>{{ question.question_text }}</h3>
+        {% if question.image_url %}
+            <img src="{{ url_for('static', filename=question.image_url) }}" alt="Изображение вопроса" style="max-width: 300px; max-height: 300px;"><br>
+        {% endif %}
+        {% if question.question_type == 'одиночный выбор' %}
+            {% for answer in question.answers %}
+                <label>
+                    <input type="radio" name="question_{{ question.question_id }}" value="{{ answer.answer_id }}">
+                    {{ answer.answer_text }}
+                </label><br>
+            {% endfor %}
+        {% elif question.question_type == 'множественный выбор' %}
+            {% for answer in question.answers %}
+                <label>
+                    <input type="checkbox" name="question_{{ question.question_id }}_{{ loop.index }}" value="{{ answer.answer_id }}">
+                    {{ answer.answer_text }}
+                </label><br>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    <button type="submit">Сохранить результат</button>
+</form>
+
+
+<a href="{{ url_for('profile') }}">Назад к профилю</a>
+{% endblock %}
+

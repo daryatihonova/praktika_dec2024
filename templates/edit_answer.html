@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Редактировать ответ{% endblock %}
+{% block content %}
+<h2>Редактировать ответ</h2>
+<form method="POST" class="form-control">
+    <label for="answer_text">Текст ответа:</label><br>
+    <input type="text" name="answer_text" required value="{{ answer.answer_text }}" class="form-control"><br><br>
+
+    <label for="is_correct">Правильный ответ:</label>
+    <input type="checkbox" name="is_correct" {% if answer.is_correct %}checked{% endif %} ><br><br>
+
+    <button type="submit">Сохранить изменения</button>
+</form>
+
+<a href="{{ url_for('profile') }}">Назад к профилю</a>
+{% endblock %}

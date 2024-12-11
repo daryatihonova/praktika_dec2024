@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   Добавить группу обучения
+{% endblock %}
+
+{% block content %} 
+<h2>Добавление групп обучения</h2>
+
+<form method="post" class="form-control">
+    <input type="text" name="group_name" placeholder="Введите название группы обучения" class="form-control"><br>
+    <button  type="submit">Добавить</button>
+</form>
+<p> </p>
+<a href="{{ url_for('profile') }}">Назад к профилю</a>
+{% endblock %}

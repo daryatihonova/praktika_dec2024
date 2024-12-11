@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Авторизация
+{% endblock %}
+
+{% block content %} 
+<form class="avtorization_form" method="POST" action="{{ url_for('login') }}">
+  <h1 class="h3 mb-3 fw-normal">Авторизация</h1>
+  <div class="form-floating">
+      <input type="text" class="form-control" id="floatingInput" name="login" placeholder="Логин" required>
+      <label for="floatingInput">Логин</label>
+  </div>
+  <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Пароль" required>
+      <label for="floatingPassword">Пароль</label>
+  </div>
+  <p></p>
+  <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
+</form>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+{% endblock %}

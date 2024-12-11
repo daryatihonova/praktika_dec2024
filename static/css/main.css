@@ -1,0 +1,31 @@
+header{
+    position: sticky;
+    top: 0;
+    padding: 10px;
+    z-index: 1000;
+    background: #fff;
+    -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+}
+
+.header_img{
+    height: 40px;
+    width: 40px;
+}
+
+.avtorization_form{
+    /* устанавливаем внешние отступы сверху и снизу в 0, а левый и правый — автоматический */
+  margin: 0 auto;
+  /* задаём ширину блока */
+  width: 300px;
+}
+
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center 
+  }
+
+
+

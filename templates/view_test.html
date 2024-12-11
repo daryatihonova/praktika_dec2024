@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Просмотр теста: {{ test.title }}{% endblock %}
+{% block content %}
+<h2>Тест: {{ test.title }}</h2>
+<p>{{ test.description }}</p>
+
+<h3>Вопросы:</h3>
+<ul>
+    {% if questions %}
+        {% for question in questions %}
+            <li>
+                <strong>{{ question.question_text }}</strong><br>
+                
+                {% if question.image_url %}  
+                    <img src="{{ url_for('static', filename=question.image_url) }}" alt="Изображение вопроса" style="max-width: 300px; max-height: 300px;"><br>
+                {% endif %}
+                
+                {% if question.answers %}
+                    <ul>
+                        {% for answer in question.answers %}
+                            <li>{{ answer.answer_text }} {% if answer.is_correct %} (Правильный ответ) {% endif %}
+                                <!-- Кнопка для редактирования ответа -->
+                                <a href="{{ url_for('edit_answer', answer_id=answer.answer_id) }}" class="btn">Редактировать ответ</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Ответы не найдены для этого вопроса.</p>
+                {% endif %}
+                <!-- Кнопка для редактирования вопроса -->
+                <a href="{{ url_for('edit_question', question_id=question.question_id) }}" class="btn">Редактировать вопрос</a>
+            </li>
+        {% endfor %}
+    {% else %}
+        <p>Вопросы не найдены для этого теста.</p>
+    {% endif %}
+</ul>
+
+<a href="{{ url_for('group') }}">Назад к списку групп</a>
+{% endblock %}
