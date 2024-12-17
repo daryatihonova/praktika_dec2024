@@ -155,6 +155,30 @@ def admin_required(f):
     return wrapper
 
 
+#функция для удаления теста пользователем
+def reset_user_test(user_id, test_id):
+    user_test = UserTest.query.filter_by(user_id=user_id, test_id=test_id).first()
+    if user_test:
+        # Delete associated UserAnswers first
+        UserAnswer.query.filter_by(user_test_id=user_test.user_test_id).delete()
+        db.session.delete(user_test)
+        db.session.commit()
+        #flash('Предыдущие результаты теста удалены.', 'success') #Show flash message
+    #else:
+      #flash('Предыдущие результаты теста не найдены.', 'warning') #Show flash message
+
+
+# Route for retrying the test
+@app.route("/test/<int:test_id>/retry", methods=["POST"])
+def retry_test(test_id):
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+    user = User.query.get(session['user_id'])
+    # Delete previous test results
+    reset_user_test(user.user_id, test_id)
+    return redirect(url_for('test', test_id=test_id))
+
+
 
 @app.route("/test/<int:test_id>", methods=["GET", "POST"])
 def test(test_id):

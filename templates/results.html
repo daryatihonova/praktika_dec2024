@@ -23,6 +23,7 @@
                     <li>не был дан</li>
                 {% endif %}
             </ul>
+            <!--
             <p>Правильный ответ:</p>
             <ul>
                 {% for answer in question.answers %}
@@ -31,9 +32,14 @@
                     {% endif %}
                 {% endfor %}
             </ul>
+        -->
         </li>
     {% endfor %}
 </ul>
+
+<form action="{{ url_for('retry_test', test_id=test.test_id) }}" method="POST">
+    <button type="submit">Пройти тест заново</button>
+</form>
 
 <a href="{{ url_for('profile') }}">Назад к профилю</a>
 {% endblock %}
